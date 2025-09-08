@@ -1,0 +1,53 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: sky-take-out
+  servlet:
+    multipart:
+      # 最大单个文件大小
+      max-file-size: 100MB
+      # 最大请求大小
+      max-request-size: 100MB
+  config:
+    import: optional:secrets.yml
+  cloud:
+    azure:
+      storage:
+        blob:
+          container-name: azure-oss
+#mapper配置文件
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.sky.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #开启驼峰命名
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    com:
+      sky:
+        mapper: debug
+        service: info
+        controller: info
+springdoc:
+  packages-to-scan: com.sky.controller
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    csrf:
+      enabled: true
+  group-configs:
+    - group: 'AdminAPI'
+      paths-to-match: '/admin/**'
+      packages-to-scan: com.sky.controller.admin
+# 自定义配置
+sky:
+  jwt:
+    # 设置jwt过期时间
+    admin-ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    admin-token-name: token
