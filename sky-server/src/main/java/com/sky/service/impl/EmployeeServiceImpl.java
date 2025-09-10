@@ -110,4 +110,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 			PageHelper.clearPage();
 		}
 	}
+
+	/**
+	 * 启用禁用员工账号
+	 * @param status 员工状态
+	 * @param id 员工ID
+	 */
+	@Override
+	public void startOrStop(Integer status, Long id) {
+		Employee employee = Employee.builder()
+				.id(id)
+				.status(status)
+				.updateTime(LocalDateTime.now())
+				.build();
+		employeeMapper.update(employee);
+	}
 }
