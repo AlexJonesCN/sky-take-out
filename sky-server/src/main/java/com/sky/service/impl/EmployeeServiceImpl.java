@@ -1,16 +1,22 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
+import com.sky.exception.BaseException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +24,7 @@ import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeMapper employeeMapper;
@@ -29,6 +36,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	/**
      * 员工登录
+	 * @param employeeLoginDTO 登录信息
+	 * @return 登录成功的员工信息
      */
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
         String username = employeeLoginDTO.getUsername();
@@ -82,4 +91,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employeeMapper.insert(employee);
 	}
 
+	/**
+	 * 员工信息分页查询
+	 * @param employeePageQueryDTO 分页查询参数
+	 * @return 分页查询结果
+	 */
+	@Override
+	public PageResult<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO) throws BaseException {
+		try {
+			PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+			try (Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO)){
+				return new PageResult<>(page.getTotal(), page.getResult());
+			}
+		} catch (Exception e) {
+			log.error("分页查询员工信息异常", e);
+			throw new RuntimeException("查询员工信息失败", e);
+		} finally {
+			PageHelper.clearPage();
+		}
+	}
 }

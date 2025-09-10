@@ -53,8 +53,9 @@ public class SpringDocConfig implements WebMvcConfigurer {
 
 	/**
 	 * 配置 Jackson 的 ObjectMapper
+	 * 标记为 @Primary，确保在有多个 ObjectMapper Bean 时优先使用此配置
 	 *
-	 * @return 自定义的 ObjectMapper
+	 * @return 自定义的 JacksonObjectMapper 实例
 	 */
 	@Bean
 	@Primary
