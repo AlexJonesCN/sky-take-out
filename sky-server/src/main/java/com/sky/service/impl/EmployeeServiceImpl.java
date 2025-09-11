@@ -22,8 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -71,9 +69,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	/**
 	 * 新增员工
 	 * @param employeeDTO 员工信息
-	 * @param currentUserId 当前登录的用户ID
 	 */
-	public void save(EmployeeDTO employeeDTO, Long currentUserId) {
+	public void save(EmployeeDTO employeeDTO) {
 		Employee employee = new Employee();
 		//将employeeDTO中的属性拷贝到employee中
 		BeanUtils.copyProperties(employeeDTO, employee);
@@ -81,12 +78,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 		employee.setStatus(StatusConstant.ENABLE);
 		//设置初始密码为123456，进行MD5加密
 		employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-		//设置当前记录的创建时间和更新时间
-		employee.setCreateTime(LocalDateTime.now());
-		employee.setUpdateTime(LocalDateTime.now());
-		//设置当前记录的创建人和修改人
-		employee.setCreateUser(currentUserId);
-		employee.setUpdateUser(currentUserId);
 		//将数据插入到数据库中
 		employeeMapper.insert(employee);
 	}
@@ -138,17 +129,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	/**
 	 * 更新员工信息
 	 * @param employeeDTO 员工信息
-	 * @param currentUserId 当前登录的用户ID
 	 */
 	@Override
-	public void update(EmployeeDTO employeeDTO, Long currentUserId) {
+	public void update(EmployeeDTO employeeDTO) {
 		Employee employee = new Employee();
 		//将employeeDTO中的属性拷贝到employee中
 		BeanUtils.copyProperties(employeeDTO, employee);
-		//设置当前记录的更新时间
-		employee.setUpdateTime(LocalDateTime.now());
-		//设置当前记录的修改人
-		employee.setUpdateUser(currentUserId);
 		//更新数据库中的数据
 		employeeMapper.update(employee);
 	}

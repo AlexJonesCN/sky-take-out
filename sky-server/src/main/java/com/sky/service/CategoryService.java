@@ -11,9 +11,8 @@ public interface CategoryService {
     /**
      * 新增分类
      * @param categoryDTO 前端传递过来的分类信息
-     * @param currentUserId 当前操作用户id
      */
-    void save(CategoryDTO categoryDTO, Long currentUserId);
+    void save(CategoryDTO categoryDTO);
 
     /**
      * 分页查询
@@ -31,17 +30,15 @@ public interface CategoryService {
     /**
      * 修改分类
      * @param categoryDTO 分类信息
-	 * @param currentUserId 当前操作用户id
      */
-    void update(CategoryDTO categoryDTO, Long currentUserId);
+    void update(CategoryDTO categoryDTO);
 
     /**
      * 启用、禁用分类
      * @param status 1启用，0禁用
      * @param id 分类id
-     * @param currentUserId 当前操作用户id
      */
-    void startOrStop(Integer status, Long id, Long currentUserId);
+    void startOrStop(Integer status, Long id);
 
     /**
      * 根据类型查询分类

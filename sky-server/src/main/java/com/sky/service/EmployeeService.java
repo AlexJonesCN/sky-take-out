@@ -18,9 +18,8 @@ public interface EmployeeService {
 	/**
 	 * 新增员工
 	 * @param employeeDTO 员工信息
-	 * @param currentUserId 当前登录的用户ID
 	 */
-	void save(EmployeeDTO employeeDTO, Long currentUserId);
+	void save(EmployeeDTO employeeDTO);
 
 	/**
 	 * 员工信息分页查询
@@ -46,7 +45,6 @@ public interface EmployeeService {
 	/**
 	 * 更新员工信息
 	 * @param employeeDTO 员工信息
-	 * @param currentUserId 当前登录的用户ID
 	 */
-	void update(EmployeeDTO employeeDTO, Long currentUserId);
+	void update(EmployeeDTO employeeDTO);
 }

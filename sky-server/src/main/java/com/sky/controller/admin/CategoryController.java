@@ -32,14 +32,13 @@ public class CategoryController {
 	/**
      * 新增分类
      * @param categoryDTO 前端传递过来的分类信息
-	 * @param currentUserId 当前操作用户id
      * @return 新增分类结果
      */
     @PostMapping
     @Operation(summary = "新增分类")
-    public Result<Object> save(@RequestBody CategoryDTO categoryDTO, @RequestAttribute Long currentUserId){
+    public Result<Object> save(@RequestBody CategoryDTO categoryDTO){
         log.info("新增分类：{}", categoryDTO);
-        categoryService.save(categoryDTO, currentUserId);
+        categoryService.save(categoryDTO);
         return Result.success();
     }
 
@@ -72,14 +71,13 @@ public class CategoryController {
     /**
      * 修改分类
      * @param categoryDTO 分类信息
-     * @param currentUserId 当前操作用户id
      * @return 修改分类结果
      */
     @PutMapping
     @Operation(summary = "修改分类")
-    public Result<String> update(@RequestBody CategoryDTO categoryDTO, @RequestAttribute Long currentUserId){
+    public Result<String> update(@RequestBody CategoryDTO categoryDTO){
 		log.info("修改分类：{}", categoryDTO);
-        categoryService.update(categoryDTO, currentUserId);
+        categoryService.update(categoryDTO);
         return Result.success();
     }
 
@@ -87,14 +85,13 @@ public class CategoryController {
      * 启用、禁用分类
      * @param status 1启用，0禁用
      * @param id 分类id
-     * @param currentUserId 当前操作用户id
      * @return 启用禁用分类结果
      */
     @PostMapping("/status/{status}")
     @Operation(summary = "启用禁用分类")
-    public Result<Object> startOrStop(@PathVariable Integer status, Long id, @RequestAttribute Long currentUserId){
+    public Result<Object> startOrStop(@PathVariable Integer status, Long id){
 		log.info("启用禁用分类：{}，{}", status, id);
-        categoryService.startOrStop(status, id, currentUserId);
+        categoryService.startOrStop(status, id);
         return Result.success();
     }
 

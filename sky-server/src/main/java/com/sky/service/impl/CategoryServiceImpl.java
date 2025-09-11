@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -41,21 +40,14 @@ public class CategoryServiceImpl implements CategoryService {
 	/**
      * 新增分类
      * @param categoryDTO 前端传递过来的分类信息
-	 * @param currentUserId 当前操作用户id
      */
-    public void save(CategoryDTO categoryDTO, Long currentUserId) {
+    public void save(CategoryDTO categoryDTO) {
         Category category = new Category();
         //属性拷贝
         BeanUtils.copyProperties(categoryDTO, category);
 
         //分类状态默认为禁用状态0
         category.setStatus(StatusConstant.DISABLE);
-
-        //设置创建时间、修改时间、创建人、修改人
-        category.setCreateTime(LocalDateTime.now());
-        category.setUpdateTime(LocalDateTime.now());
-        category.setCreateUser(currentUserId);
-        category.setUpdateUser(currentUserId);
 
         categoryMapper.insert(category);
     }
@@ -105,15 +97,10 @@ public class CategoryServiceImpl implements CategoryService {
     /**
      * 修改分类
      * @param categoryDTO 分类信息
-	 * @param currentUserId 当前操作用户id
      */
-    public void update(CategoryDTO categoryDTO, Long currentUserId) {
+    public void update(CategoryDTO categoryDTO) {
         Category category = new Category();
         BeanUtils.copyProperties(categoryDTO,category);
-
-        //设置修改时间、修改人
-        category.setUpdateTime(LocalDateTime.now());
-        category.setUpdateUser(currentUserId);
 
         categoryMapper.update(category);
     }
@@ -122,14 +109,11 @@ public class CategoryServiceImpl implements CategoryService {
      * 启用、禁用分类
      * @param status 1启用，0禁用
      * @param id 分类id
-     * @param currentUserId 当前操作用户id
      */
-    public void startOrStop(Integer status, Long id, Long currentUserId) {
+    public void startOrStop(Integer status, Long id) {
         Category category = Category.builder()
                 .id(id)
                 .status(status)
-                .updateTime(LocalDateTime.now())
-                .updateUser(currentUserId)
                 .build();
         categoryMapper.update(category);
     }

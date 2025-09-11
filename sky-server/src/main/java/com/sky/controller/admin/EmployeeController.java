@@ -81,9 +81,9 @@ public class EmployeeController {
 	 */
 	@PostMapping
 	@Operation(summary = "新增员工")
-	public Result<Object> save(@RequestBody EmployeeDTO employeeDTO, @RequestAttribute Long currentUserId) {
+	public Result<Object> save(@RequestBody EmployeeDTO employeeDTO) {
 		log.info("新增员工：{}", employeeDTO);
-		employeeService.save(employeeDTO, currentUserId);
+		employeeService.save(employeeDTO);
 		return Result.success();
 	}
 
@@ -130,14 +130,13 @@ public class EmployeeController {
 	/**
 	 * 更新员工信息
 	 * @param employeeDTO 员工信息
-	 * @param currentUserId 当前登录的用户ID
 	 * @return 更新结果
 	 */
 	@PutMapping
 	@Operation(summary = "更新员工信息")
-	public Result<Object> update(@RequestBody EmployeeDTO employeeDTO, @RequestAttribute Long currentUserId) {
+	public Result<Object> update(@RequestBody EmployeeDTO employeeDTO) {
 		log.info("更新员工信息：{}", employeeDTO);
-		employeeService.update(employeeDTO, currentUserId);
+		employeeService.update(employeeDTO);
 		return Result.success();
 	}
 }
