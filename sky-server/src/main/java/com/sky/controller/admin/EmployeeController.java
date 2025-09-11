@@ -69,7 +69,7 @@ public class EmployeeController {
 	 */
     @PostMapping("/logout")
     @Operation(summary = "员工登出")
-    public Result<String> logout() {
+    public Result<Object> logout() {
 		log.info("员工登出");
         return Result.success();
     }
@@ -81,7 +81,7 @@ public class EmployeeController {
 	 */
 	@PostMapping
 	@Operation(summary = "新增员工")
-	public Result<String> save(@RequestBody EmployeeDTO employeeDTO, @RequestAttribute Long currentUserId) {
+	public Result<Object> save(@RequestBody EmployeeDTO employeeDTO, @RequestAttribute Long currentUserId) {
 		log.info("新增员工：{}", employeeDTO);
 		employeeService.save(employeeDTO, currentUserId);
 		return Result.success();
