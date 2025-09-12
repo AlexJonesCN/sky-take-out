@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +38,7 @@ public class CommonController {
      */
     @PostMapping("/upload")
     @Operation(summary = "文件上传")
-    public Result<String> upload(@RequestParam("file") MultipartFile file) {
+    public Result<String> upload(MultipartFile file) {
         log.info("开始文件上传: {}", file.getOriginalFilename());
 
         // 校验文件是否为空

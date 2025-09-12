@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
 		// Duplicate entry 'zhangsan' for key 'employee.idx_username'
 		if(ex.getMessage().contains("Duplicate entry")) {
 			String[] split = ex.getMessage().split(" ");
-			String msg = "用户名" + split[2] + MessageConstant.ALREADY_EXISTS;
+			String msg = split[2] + MessageConstant.ALREADY_EXISTS;
 			log.error("SQL语句执行异常：{}", msg);
 			return Result.error(msg);
 		} else {
