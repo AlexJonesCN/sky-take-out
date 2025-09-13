@@ -9,9 +9,11 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
 import com.sky.exception.DeletionNotAllowedException;
+import com.sky.exception.DishDisableFailedException;
 import com.sky.mapper.DishFlavorMapper;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealDishMapper;
+import com.sky.mapper.SetmealMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
@@ -30,11 +32,14 @@ public class DishServiceImpl implements DishService {
 	private final DishMapper dishMapper;
 	private final DishFlavorMapper dishFlavorMapper;
 	private final SetmealDishMapper setmealDishMapper;
+	private final SetmealMapper setmealMapper;
+
 	@Autowired
-	public DishServiceImpl(DishMapper dishMapper, DishFlavorMapper dishFlavorMapper, SetmealDishMapper setmealDishMapper) {
+	public DishServiceImpl(DishMapper dishMapper, DishFlavorMapper dishFlavorMapper, SetmealDishMapper setmealDishMapper, SetmealMapper setmealMapper) {
 		this.dishMapper = dishMapper;
 		this.dishFlavorMapper = dishFlavorMapper;
 		this.setmealDishMapper = setmealDishMapper;
+		this.setmealMapper = setmealMapper;
 	}
 
 	/**
@@ -147,5 +152,45 @@ public class DishServiceImpl implements DishService {
 			// 向口味表插入多条数据
 			dishFlavorMapper.insertBatch(flavors);
 		}
+	}
+
+	/**
+	 * 根据分类id查询对应的菜品列表
+	 * @param categoryId 分类id
+	 * @return 菜品列表
+	 */
+	@Override
+	public List<Dish> list(Long categoryId) {
+		Dish dish = Dish.builder()
+				.categoryId(categoryId)
+				.status(StatusConstant.ENABLE) // 只查询启售的菜品
+				.build();
+		return dishMapper.list(dish);
+	}
+
+	/**
+	 * 启售或停售菜品
+	 * @param status 菜品状态
+	 * @param id 菜品id
+	 */
+	@Override
+	public void startOrStop(Integer status, Long id) {
+		// 如果当前是停售状态，判断菜品是否关联了套餐，且套餐是否启售，如果是启售则不能停售
+		if(status.equals(StatusConstant.DISABLE)) {
+			List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishId(id);
+			if(setmealIds != null && !setmealIds.isEmpty()) {
+				setmealIds.forEach(setmealId -> {
+					Integer setmealStatus = setmealMapper.getById(setmealId).getStatus();
+					if(setmealStatus != null && setmealStatus.equals(StatusConstant.ENABLE)) {
+						throw new DishDisableFailedException(MessageConstant.DISH_RELATED_BY_SETMEAL_WHICH_IS_ON_SALE);
+					}
+				});
+			}
+		}
+		Dish dish = Dish.builder()
+				.id(id)
+				.status(status)
+				.build();
+		dishMapper.update(dish);
 	}
 }
